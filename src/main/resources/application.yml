@@ -1,1 +1,19 @@
+server:
+  port: 8000
 
+spring:
+  application:
+    name: ms-user
+  
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_user?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: 1234567
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    open-in-view: true
