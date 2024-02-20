@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserMakeLoginDto {
     @NotBlank
     @Email(message = "Formato do e-mail está invalido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
-    private String username;
+    private String email;
     @NotBlank
     @Size(min = 6, max = 6)
     private String password;
