@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.compassuol.sp.challenge.msuser.enumerate.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,11 +26,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String cpf;
     private Date birthDate;
+    @Column(unique = true)
     private String email;
     private String cep;
     private String password;
