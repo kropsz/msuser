@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.msuser.service.business;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
 import com.compassuol.sp.challenge.msuser.model.User;
@@ -8,6 +9,7 @@ import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class VerifyBusinessRules {
     private final UserRepository userRepository;
@@ -20,11 +22,7 @@ public class VerifyBusinessRules {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
     }
 
-    public String encryptPassword(String password) {
-        return new BCryptPasswordEncoder().encode(password);
-    }
-
     public boolean checkPasswordIsEqual(String password, String passwordEncode){
-       return encryptPassword(password).equals(passwordEncode);
+        return new BCryptPasswordEncoder().matches(password, passwordEncode);
     }
 }
