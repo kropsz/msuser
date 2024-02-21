@@ -1,5 +1,7 @@
 package com.compassuol.sp.challenge.msuser.web.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -8,7 +10,7 @@ public class UserResponseDto {
     private String firstName;
     private String lastName;
     private String cpf;
-    private String birthdate;
+    private Date birthdate;
     private String email;
     private String password;
     private boolean active;
