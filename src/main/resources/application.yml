@@ -1,1 +1,31 @@
+server:
+  port: 8000
 
+spring:
+  application:
+    name: ms-user
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_user?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: 1234567
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    open-in-view: true
+api:
+  security:
+    token:
+      secret: 4Fj9G@p2sW!qL7zX6oKtVbA#3nYcZmR8dU5wP1hS2xQ0jN6gD3hL2zK4wV8y
+
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+
+mq:
+  queue:
+    event-notification: event-notification 
