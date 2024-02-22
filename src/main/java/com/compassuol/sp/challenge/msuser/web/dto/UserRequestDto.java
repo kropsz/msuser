@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msuser.web.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -25,10 +25,13 @@ public class UserRequestDto {
     private String cpf;
     @NotNull(message = "Campo data de nascimento não pode ser vazio")
     @Past
-    private Date birthdate;
+    private LocalDate birthdate;
     @NotNull(message = "Campo 'email' não pode ser vazio")
     @Email(message = "Formato do e-mail está invalido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     private String email;
+    @NotNull
+    @Size(min = 8, max = 9)
+    private String cep;
     @NotBlank(message = "Campo'password' não pode ser vazio")
     @Size(min = 6, message = "A senha deve possuir mais que 6 caracteres")
     private String password;
