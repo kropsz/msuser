@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msuser.web.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -25,7 +25,7 @@ public class UserUpdateFieldsDto {
     private String cpf;
     @NotNull(message = "Campo data de nascimento não pode ser vazio")
     @Past
-    private Date birthdate;
+    private LocalDate birthdate;
     @NotBlank(message = "Campo 'email' não pode ser vazio")
     @Email(message = "Formato do e-mail está invalido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     private String email;

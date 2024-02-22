@@ -1,8 +1,8 @@
 
 package com.compassuol.sp.challenge.msuser.model;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -32,12 +32,12 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
     private String firstName;
     private String lastName;
     @Column(unique = true)
     private String cpf;
-    private Date birthdate;
+    private LocalDate birthdate;
     @Column(unique = true)
     private String email;
     private String cep;
