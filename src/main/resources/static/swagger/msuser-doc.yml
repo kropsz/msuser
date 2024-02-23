@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: ms-user 
+  description: API Web para acessar as operações do recurso de Usuários.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/users
+basePath: /api/users
+paths:
+  /:
+    post:
+      summary: Criar novo Usuário.
+      description: Recurso para criar um novo usuário.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestDto'
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Operação de criação efetuada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+        '400':
+          description: Email ou CPF já cadastrados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '500':
+          description: Erro interno no servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /login:
+    post:
+      summary: Login de Usuário
+      description: Usuário utilizar login para se authenticar e retonar o token
+      requestBody:
+         required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserMakeLoginDto'  
+       responses:
+        200:
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token de Autenticação
+        404:
+          description: Usuário não existe no Banco de Dados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /{id}:
+    get:
+      summary: Buscar Usuário
+      description: Buscar Usuário pelo id
+      parameters:
+        - name: id
+          in: path
+          description: Id para buscar no banco de dados
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+        404:
+          description: Usuário não encontrado no banco de dados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        403:
+          description: Sem permissão para acessar esse recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    put:
+      summary: Atualizar Usuário
+      description: Atualizar campos de usuário.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID para atualizar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: '#/components/schemas/UserUpdateFieldsDto'
+
+      responses:
+        200:
+          description: Operação finalizada com sucesso
+          content:
+            application/json:
+              $ref: '#/components/schemas/UserResponseDto'
+        404:
+          description: Id não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        403:
+          description: Sem permissão para acessar esse recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /password:
+    put:
+      summary: Atualizar Senha do Usuario
+      description: Atualizar o campo senha de um usuário
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID para atualizar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'web/dto/UserUpdatePasswordDto'
+      responses:
+        200:
+          description: Operação finalizada com sucesso
+          content:
+            application/json:
+              $ref: '#/components/schemas/UserResponseDto'
+        404:
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          403:
+            description: Sem permissão para acessar esse recurso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorMessage'
+
+
+
+
+
+components:
+  schemas:
+    UserRequestDto:
+      $ref: 'web/dto/UserRequestDto'
+    UserResponseDto:
+      $ref: 'web/dto/UserResponseDto'
+    UserMakeLoginDto:
+      $ref: 'web/dto/UserMakeLoginDto'
+    UserUpdateFieldsDto:
+      $ref: 'web/dto/UserUpdateFieldsDto'
+    UserUpdatePasswordDto:
+      $ref: 'web/dto/UserUpdatePasswordDto'
+    ErrorMessage:
+      $ref: 'web/exception/ErrorMessage'

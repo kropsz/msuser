@@ -3,7 +3,6 @@ package com.compassuol.sp.challenge.msuser.service.business;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
 import com.compassuol.sp.challenge.msuser.model.User;
 import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 
@@ -16,10 +15,6 @@ public class VerifyBusinessRules {
 
     public boolean verifyIfCredentialsExists(User user) {
         return userRepository.existsByCpfOrEmail(user.getCpf(), user.getEmail());
-    }
-
-    public User checkIfUserExists(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
     }
 
     public boolean checkPasswordIsEqual(String password, String passwordEncode){
