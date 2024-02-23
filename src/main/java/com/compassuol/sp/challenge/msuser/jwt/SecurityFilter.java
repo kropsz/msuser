@@ -2,12 +2,13 @@ package com.compassuol.sp.challenge.msuser.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
@@ -26,20 +27,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
+    private PathMatcher pathMatcher = new AntPathMatcher();
     private final JwtTokenService tokenService;
     private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        List<String> openRoutes = Arrays.asList("/api/users", "/api/users/login");
 
         String requestURI = request.getRequestURI();
-        if (openRoutes.contains(requestURI) && request.getMethod().equals("POST")) {
+
+        if (isPathMatch(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
-
         try {
             var token = this.recoverToken(request);
             if (token != null) {
@@ -57,12 +58,11 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-            
-        }catch (BadGatewayException ex) {
+
+        } catch (BadGatewayException ex) {
             log.error("Acesso negado", ex);
             throw new BadGatewayException(ex.getMessage());
-        } 
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("Erro ao filtrar a solicitação", ex);
             throw new RuntimeException(ex);
         }
@@ -77,5 +77,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = authHeader.replace("Bearer ", "");
         log.info("Token recuperado do cabeçalho de autorização");
         return token;
+    }
+
+    private boolean isPathMatch(String requestURI) {
+        return Arrays.stream(SpringSecurityConfig.DOCUMENTATION_OPENAPI)
+            .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
     }
 }
