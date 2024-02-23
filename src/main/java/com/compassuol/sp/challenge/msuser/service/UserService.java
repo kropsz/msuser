@@ -41,7 +41,7 @@ public class UserService {
             eventPublisher.eventNotification(event);
 
         } catch (JsonProcessingException ex) {
-            throw new BusinessViolationException("Error");
+            throw new BusinessViolationException("Erro Enviando mensagem para fila de eventos !");
         }
         return userRepository.save(user);
     }
@@ -54,7 +54,7 @@ public class UserService {
                 Event event = new Event(user.getEmail(), EventEnum.LOGIN, null);
                 eventPublisher.eventNotification(event);
             } catch (Exception e) {
-                throw new BusinessViolationException("Error");
+                throw new BusinessViolationException("Erro enviando mensagem para fila de eventos !");
             }
             return tokenService.createToken(chekUser.get());
         } else {
@@ -64,35 +64,35 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserById(Long id) {
-        var user = checkRules.checkIfUserExists(id);
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
         return user;
     }
 
     @Transactional
     public User updateUserFields(Long id, UserUpdateFieldsDto updateDto) {
-        var user = checkRules.checkIfUserExists(id);
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
         User updateUser = userRepository.save(UserMapper.toUserFromUpdateUser(updateDto, user));
         try {
             Event event = new Event(updateUser.getEmail(), EventEnum.UPDATE, null);
             eventPublisher.eventNotification(event);
         } catch (Exception e) {
-            throw new BusinessViolationException("Error");
+            throw new BusinessViolationException("Erro enviando mensagem para fila de eventos !");
         }
         return updateUser;
     }
 
     @Transactional
     public User updateUserPassword(Long id, String password) {
-        var user = checkRules.checkIfUserExists(id);
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
         user.setPassword(encryptPassword(password));
-
+        userRepository.save(user);
         try {
             Event event = new Event(user.getEmail(), EventEnum.UPDATE_PASSWORD, null);
             eventPublisher.eventNotification(event);
         } catch (Exception e) {
-            throw new BusinessViolationException("Error");
+            throw new BusinessViolationException("Erro enviando mensagem para fila de eventos !");
         }
-        return userRepository.save(user);
+        return user;
 
     }
 
