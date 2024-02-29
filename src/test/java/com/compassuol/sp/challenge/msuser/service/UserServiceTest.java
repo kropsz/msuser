@@ -6,6 +6,7 @@ import static com.compassuol.sp.challenge.msuser.common.EventConstants.VALID_EVE
 import static com.compassuol.sp.challenge.msuser.common.EventConstants.VALID_EVENT_UPDATE_PASSWORD;
 import static com.compassuol.sp.challenge.msuser.common.UserConstants.VALID_USER;
 import static com.compassuol.sp.challenge.msuser.common.UserConstants.VALID_USER_MAKE_LOGIN;
+import static com.compassuol.sp.challenge.msuser.common.UserConstants.VALID_USER_RESPONSE;
 import static com.compassuol.sp.challenge.msuser.common.UserConstants.VALID_USER_UPDATE_FIELDS;
 import static com.compassuol.sp.challenge.msuser.common.UserConstants.passwordEncode;
 import static com.compassuol.sp.challenge.msuser.common.UserConstants.passwordUpdateEncode;
@@ -34,11 +35,14 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import com.compassuol.sp.challenge.msuser.exception.BusinessViolationException;
 import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
-import com.compassuol.sp.challenge.msuser.jwt.JwtTokenService;
+import com.compassuol.sp.challenge.msuser.feign.AddressFeign;
+import com.compassuol.sp.challenge.msuser.jwt.JwtTokenProvider;
+import com.compassuol.sp.challenge.msuser.model.Address;
 import com.compassuol.sp.challenge.msuser.model.User;
 import com.compassuol.sp.challenge.msuser.mqueue.EventNotificationPublisher;
 import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 import com.compassuol.sp.challenge.msuser.service.business.VerifyBusinessRules;
+import com.compassuol.sp.challenge.msuser.web.dto.UserResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,10 +61,13 @@ public class UserServiceTest {
     private VerifyBusinessRules chekRules;
 
     @Mock
-    private JwtTokenService jwtTokenService;
+    private JwtTokenProvider jwtTokenService;
 
     @Mock
     private EventNotificationPublisher eventPublisher;
+
+    @Mock
+    private AddressFeign addressFeign;
 
     @MockBean
     private RabbitTemplate rabbitTemplate;
@@ -71,8 +78,9 @@ public class UserServiceTest {
         when(chekRules.verifyIfCredentialsExists(VALID_USER)).thenReturn(false);
         doNothing().when(eventPublisher).eventNotification(VALID_EVENT_CREATE);
         when(userRepository.save(VALID_USER)).thenReturn(VALID_USER);
-        User user = userService.registerUser(VALID_USER);
-        assertEquals(VALID_USER, user);
+        UserResponseDto user = userService.registerUser(VALID_USER);
+        user.setAddress(new Address());
+        assertEquals(VALID_USER_RESPONSE, user);
     }
 
     @Test
@@ -107,8 +115,9 @@ public class UserServiceTest {
     @Order(5)
     public void getUser_sucessful_withValidId() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(VALID_USER));
-        User user = userService.getUserById(1L);
-        assertEquals(VALID_USER, user);
+        UserResponseDto user = userService.getUserById(1L);
+        user.setAddress(new Address());
+        assertEquals(VALID_USER_RESPONSE, user);
     }
 
     @Test
@@ -124,8 +133,9 @@ public class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(VALID_USER));
         when(userRepository.save(VALID_USER)).thenReturn(VALID_USER);
         doNothing().when(eventPublisher).eventNotification(VALID_EVENT_UPDATE);
-        User user = userService.updateUserFields(1L, VALID_USER_UPDATE_FIELDS);
-        assertEquals(VALID_USER, user);
+        UserResponseDto user = userService.updateUserFields(1L, VALID_USER_UPDATE_FIELDS);
+        user.setAddress(new Address());
+        assertEquals(VALID_USER_RESPONSE, user);
     }
 
     @Test
