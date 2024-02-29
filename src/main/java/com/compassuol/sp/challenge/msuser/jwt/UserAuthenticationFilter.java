@@ -11,7 +11,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
 import com.compassuol.sp.challenge.msuser.model.User;
 import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 
@@ -25,10 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SecurityFilter extends OncePerRequestFilter {
+public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private PathMatcher pathMatcher = new AntPathMatcher();
-    private final JwtTokenService tokenService;
+    private final JwtTokenProvider tokenService;
     private final UserRepository userRepository;
 
     @Override
@@ -59,9 +58,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-        } catch (BadGatewayException ex) {
+        } catch (RuntimeException ex) {
             log.error("Acesso negado", ex);
-            throw new BadGatewayException(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
         } catch (Exception ex) {
             log.error("Erro ao filtrar a solicitação", ex);
             throw new RuntimeException(ex);
@@ -80,7 +79,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private boolean isPathMatch(String requestURI) {
-        return Arrays.stream(SpringSecurityConfig.DOCUMENTATION_OPENAPI)
+        return Arrays.stream(SecurityConfiguration.DOCUMENTATION_OPENAPI)
             .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
     }
 }

@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SpringSecurityConfig {
+public class SecurityConfiguration {
 
-    private final SecurityFilter securityFilter;
+    private final UserAuthenticationFilter securityFilter;
 
   
     public static final String[] DOCUMENTATION_OPENAPI = {
