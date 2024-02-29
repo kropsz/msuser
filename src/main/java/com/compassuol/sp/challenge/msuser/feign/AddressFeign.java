@@ -8,7 +8,7 @@ import com.compassuol.sp.challenge.msuser.model.Address;
 
 @FeignClient(name = "msaddress", url = "http://localhost:8081")
 public interface AddressFeign {
-    
+
     @GetMapping("/v1/address-api/get-address-by-cep/{cep}")
-    Address getAddressByCep(@PathVariable ("cep") String cep);
+    Address getAddressByCep(@PathVariable("cep") String cep);
 }

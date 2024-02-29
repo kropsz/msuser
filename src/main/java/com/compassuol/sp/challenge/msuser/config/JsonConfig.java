@@ -9,12 +9,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 public class JsonConfig {
-    
+
     @Bean
-public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-    return builder -> {
-        builder.modules(new JavaTimeModule());
-        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    };
-}
+    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+        return builder -> {
+            builder.modules(new JavaTimeModule());
+            builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        };
+    }
 }

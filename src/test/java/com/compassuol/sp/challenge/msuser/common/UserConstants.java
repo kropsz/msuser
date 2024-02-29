@@ -36,8 +36,8 @@ public class UserConstants {
                         true);
 
         public static final UserResponseDto VALID_USER_RESPONSE = new UserResponseDto(
-        1l,                
-        "Ayrton",
+                        1l,
+                        "Ayrton",
                         "Senna",
                         "61575923033",
                         CURRENT_DATE,
@@ -66,8 +66,6 @@ public class UserConstants {
         public static final UserUpdateFieldsDto VALID_USER_UPDATE_FIELDS = new UserUpdateFieldsDto(
                         "Ayrton",
                         "Senna",
-                        "61575923033",
-                        CURRENT_DATE,
                         "seninha@gmail.com",
                         "12314151",
                         true);
@@ -76,14 +74,14 @@ public class UserConstants {
                         updatePassword);
 
         public static final User VALID_UPDATED_USER = new User(
-                1L,
-                Role.USER,
-                "Ayrton",
-                "Senna",
-                "61575923033",
-                CURRENT_DATE,
-                "seninha@gmail.com",
-                "12314151",
-                passwordUpdateEncode,
-                true);
+                        1L,
+                        Role.USER,
+                        "Ayrton",
+                        "Senna",
+                        "61575923033",
+                        CURRENT_DATE,
+                        "seninha@gmail.com",
+                        "12314151",
+                        passwordUpdateEncode,
+                        true);
 }

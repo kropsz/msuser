@@ -44,7 +44,6 @@ public class VerifyBusinessRulesTest {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(rawPassword);
         assertTrue(verifyBusinessRules.checkPasswordIsEqual(rawPassword, encodedPassword));
-            
 
     }
 }

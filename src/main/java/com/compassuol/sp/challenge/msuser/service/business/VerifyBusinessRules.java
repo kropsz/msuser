@@ -17,7 +17,7 @@ public class VerifyBusinessRules {
         return userRepository.existsByCpfOrEmail(user.getCpf(), user.getEmail());
     }
 
-    public boolean checkPasswordIsEqual(String password, String passwordEncode){
+    public boolean checkPasswordIsEqual(String password, String passwordEncode) {
         return new BCryptPasswordEncoder().matches(password, passwordEncode);
     }
 }

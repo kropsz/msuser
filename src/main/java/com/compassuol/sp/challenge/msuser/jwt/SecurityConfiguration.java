@@ -24,32 +24,31 @@ public class SecurityConfiguration {
 
     private final UserAuthenticationFilter securityFilter;
 
-  
     public static final String[] DOCUMENTATION_OPENAPI = {
-        "/docs/index.html",
-        "/docs-park.html", "/docs-park/**",
-        "/v3/api-docs/**",
-        "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
-        "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
-};
+            "/docs/index.html",
+            "/docs-park.html", "/docs-park/**",
+            "/v3/api-docs/**",
+            "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+    };
 
-@Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    return http
-            .csrf(crsft -> crsft.disable())
-            .formLogin(form -> form.disable())
-            .httpBasic(httpBasic -> httpBasic.disable())
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
-                    .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
-                    .anyRequest().permitAll() //SEGURANÇA DESATIVADA
-            ).sessionManagement(
-                    session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-}
+        return http
+                .csrf(crsft -> crsft.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                        .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
+                        .anyRequest().permitAll() // SEGURANÇA DESATIVADA
+                ).sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(

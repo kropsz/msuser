@@ -15,14 +15,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -81,7 +79,7 @@ public class UserIT {
                 .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(requestBody)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("message", containsString("Campos Inválidos")));
-                
+
     }
 
     @Test
@@ -108,7 +106,7 @@ public class UserIT {
         assertThat(requestBody.getPassword()).isEqualTo(VALID_USER_MAKE_LOGIN.getPassword());
         assertThat(requestBody).isNotNull();
 
-            }
+    }
 
     @Test
     @Order(5)
@@ -129,7 +127,7 @@ public class UserIT {
         mockMvc.perform(get("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-                
+
     }
 
     @Test
@@ -141,7 +139,6 @@ public class UserIT {
                 .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(requestBody)))
                 .andExpect(status().isOk());
         assertThat(requestBody.getFirstName()).isEqualTo(VALID_USER_UPDATE_FIELDS.getFirstName());
-        assertThat(requestBody.getCpf()).isEqualTo(VALID_USER_UPDATE_FIELDS.getCpf());
         assertThat(requestBody).isNotNull();
     }
 
@@ -149,7 +146,7 @@ public class UserIT {
     @Order(7)
     public void updateUserFields_withInvalidCpf() throws Exception {
         UserUpdateFieldsDto requestBody = VALID_USER_UPDATE_FIELDS;
-        requestBody.setCpf("invalid-cpf");
+        requestBody.setEmail("invalid-email");
         mockMvc.perform(put("/api/users/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(requestBody)))

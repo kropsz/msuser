@@ -80,6 +80,6 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isPathMatch(String requestURI) {
         return Arrays.stream(SecurityConfiguration.DOCUMENTATION_OPENAPI)
-            .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
+                .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
     }
 }

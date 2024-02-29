@@ -18,7 +18,7 @@ public class UserResponseDto {
     private String lastName;
     private String cpf;
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate birthdate; 
+    private LocalDate birthdate;
     private String email;
     private boolean active;
     private Address address;

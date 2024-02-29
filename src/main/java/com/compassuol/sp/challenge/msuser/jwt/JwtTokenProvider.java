@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtTokenProvider {
 
-    
     @Value("${api.security.token.secret}")
     private String secret;
 

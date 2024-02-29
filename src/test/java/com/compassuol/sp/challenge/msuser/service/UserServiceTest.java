@@ -174,7 +174,7 @@ public class UserServiceTest {
         }).when(eventPublisher).eventNotification(VALID_EVENT_CREATE);
         when(userRepository.save(VALID_USER)).thenReturn(VALID_USER);
     }
-    
+
     @Test
     @Order(12)
     public void loginUser_Error_SendingMessageToEventQueue() throws JsonProcessingException {
@@ -205,9 +205,3 @@ public class UserServiceTest {
         }).when(eventPublisher).eventNotification(VALID_EVENT_UPDATE_PASSWORD);
     }
 }
-
-
-
-
-
-
