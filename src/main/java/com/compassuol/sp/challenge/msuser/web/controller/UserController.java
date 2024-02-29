@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
 
   private final UserService userService;
@@ -31,7 +31,7 @@ public class UserController {
   @PostMapping()
   public ResponseEntity<UserResponseDto> userRegister(@RequestBody @Valid UserRequestDto dto) {
     var entity = userService.registerUser(UserMapper.toUser(dto));
-    return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.tDto(entity));
+    return ResponseEntity.status(HttpStatus.CREATED).body(entity);
   }
 
   @PostMapping("/login")
@@ -42,7 +42,7 @@ public class UserController {
   @GetMapping("/{id}")
   public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
     var user = userService.getUserById(id);
-    return ResponseEntity.status(HttpStatus.OK).body(UserMapper.tDto(user));
+    return ResponseEntity.status(HttpStatus.OK).body(user);
 
   }
 
@@ -50,7 +50,7 @@ public class UserController {
   public ResponseEntity<UserResponseDto> updateUserFields(@PathVariable Long id,
       @RequestBody @Valid UserUpdateFieldsDto updateDto) {
     var user = userService.updateUserFields(id, updateDto);
-    return ResponseEntity.ok().body(UserMapper.tDto(user));
+    return ResponseEntity.ok().body(user);
   }
 
   @PutMapping("/{id}/password")

@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
+import com.compassuol.sp.challenge.msuser.exception.TokenVerificationException;
 import com.compassuol.sp.challenge.msuser.exception.BusinessViolationException;
 import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
 
@@ -51,8 +51,8 @@ public class ApiExceptionHandler{
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
-    @ExceptionHandler(BadGatewayException.class)
-    public ResponseEntity<ErrorMessage> accessDeniedException(BadGatewayException ex, HttpServletRequest request) {
+    @ExceptionHandler(TokenVerificationException.class)
+    public ResponseEntity<ErrorMessage> accessDeniedException(TokenVerificationException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)

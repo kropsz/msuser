@@ -1,11 +1,10 @@
 openapi: 3.0.0
 info:
-  title: ms-user 
+  title: ms-user
   description: API Web para acessar as operações do recurso de Usuários.
   version: 1.0.0
 servers:
-  - url: http://localhost:8000/api/users
-basePath: /api/users
+  - url: http://localhost:8080/
 paths:
   /:
     post:
@@ -16,39 +15,37 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRequestDto'
-      produces:
-        - application/json
+              $ref: "#/components/schemas/UserRequestDto"
       responses:
-        '201':
+        "201":
           description: Operação de criação efetuada com sucesso.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseDto'
-        '400':
+                $ref: "#/components/schemas/UserResponseDto"
+        "400":
           description: Email ou CPF já cadastrados.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
-        '500':
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
           description: Erro interno no servidor.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
   /login:
     post:
       summary: Login de Usuário
       description: Usuário utilizar login para se authenticar e retonar o token
       requestBody:
-         required: true
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserMakeLoginDto'  
-       responses:
+              $ref: "#/components/schemas/UserMakeLoginDto"
+      responses:
         200:
           description: Login realizado com sucesso
           content:
@@ -64,13 +61,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
   /{id}:
     get:
       summary: Buscar Usuário
@@ -88,25 +85,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseDto'
+                $ref: "#/components/schemas/UserResponseDto"
         404:
           description: Usuário não encontrado no banco de dados
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         403:
           description: Sem permissão para acessar esse recurso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
     put:
       summary: Atualizar Usuário
       description: Atualizar campos de usuário.
@@ -122,33 +119,34 @@ paths:
         content:
           application/json:
             schema:
-               $ref: '#/components/schemas/UserUpdateFieldsDto'
+              $ref: "#/components/schemas/UserUpdateFieldsDto"
 
       responses:
         200:
           description: Operação finalizada com sucesso
           content:
             application/json:
-              $ref: '#/components/schemas/UserResponseDto'
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
         404:
           description: Id não encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         403:
           description: Sem permissão para acessar esse recurso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
-  /password:
+                $ref: "#/components/schemas/ErrorMessage"
+  /{id}/password:
     put:
       summary: Atualizar Senha do Usuario
       description: Atualizar o campo senha de um usuário
@@ -164,47 +162,145 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'web/dto/UserUpdatePasswordDto'
+              $ref: "web/dto/UserUpdatePasswordDto"
       responses:
         200:
           description: Operação finalizada com sucesso
           content:
             application/json:
-              $ref: '#/components/schemas/UserResponseDto'
+              schema:
+                $ref: "#/components/schemas/UserResponseDto"
         404:
           description: Usuário não encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
+                $ref: "#/components/schemas/ErrorMessage"
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
-          403:
-            description: Sem permissão para acessar esse recurso
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorMessage'
-
-
-
-
+                $ref: "#/components/schemas/ErrorMessage"
+        403:
+          description: Sem permissão para acessar esse recurso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
 
 components:
   schemas:
     UserRequestDto:
-      $ref: 'web/dto/UserRequestDto'
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: Nome do usuário
+        lastName:
+          type: string
+          description: Sobrenome do usuário
+        cpf:
+          type: string
+          description: CPF do usuário
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento do usuário
+        email:
+          type: string
+          description: Email do usuário
+        password:
+          type: string
+          description: Senha do usuário
+        active:
+          type: boolean
+          description: Status do usuário
+
     UserResponseDto:
-      $ref: 'web/dto/UserResponseDto'
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id do usuário
+        firstName:
+          type: string
+          description: Nome do usuário
+        lastName:
+          type: string
+          description: Sobrenome do usuário
+        cpf:
+          type: string
+          description: CPF do usuário
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento do usuário
+        email:
+          type: string
+          description: Email do usuário
+        active:
+          type: boolean
+          description: Status do usuário
+
     UserMakeLoginDto:
-      $ref: 'web/dto/UserMakeLoginDto'
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email do usuário
+        password:
+          type: string
+          description: Senha do usuário
     UserUpdateFieldsDto:
-      $ref: 'web/dto/UserUpdateFieldsDto'
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: Nome do usuário
+        lastName:
+          type: string
+          description: Sobrenome do usuário
+        cpf:
+          type: string
+          description: CPF do usuário
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento do usuário
+        email:
+          type: string
+          description: Email do usuário
+        active:
+          type: boolean
+          description: Status do usuário
     UserUpdatePasswordDto:
-      $ref: 'web/dto/UserUpdatePasswordDto'
+      type: object
+      properties:
+        password:
+          type: string
+          description: Senha do usuário
+
     ErrorMessage:
-      $ref: 'web/exception/ErrorMessage'
+      type: object
+      properties:
+        path:
+          type: string
+          description: Caminho do recurso
+        method:
+          type: string
+          description: Método HTTP
+        status:
+          type: integer
+          description: Código de status
+        statusText:
+          type: string
+          description: Mensagem de status
+        message:
+          type: string
+          description: Mensagem de erro
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+          description: Lista de erros
