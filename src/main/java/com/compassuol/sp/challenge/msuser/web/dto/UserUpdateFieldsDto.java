@@ -33,4 +33,8 @@ public class UserUpdateFieldsDto {
     @NotBlank(message = "Campo 'email' não pode ser vazio")
     @Email(message = "Formato do e-mail está invalido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     private String email;
+    @NotBlank(message = "Campo 'cep' não pode ser vazio")
+    @Size(min = 8, max = 8)
+    private String cep;
+    private boolean active;
 }
