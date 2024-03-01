@@ -70,7 +70,7 @@ Gerenciador de Dependências : Maven
 ```
 
 #### Fazer Login de Usuário
-* `REQUEST`  - Utilizado para fazer LOGIN de um pedido.
+* `REQUEST`  - Utilizado para fazer LOGIN de um usuário.
 ```JSON
 {
   "email": "ayrton@email.com",
@@ -84,7 +84,7 @@ Gerenciador de Dependências : Maven
 }
 ```
 #### Atualizar Usuários
-* `REQUEST`  - Utilizado para fazer UPDATE de um pedido.
+* `REQUEST`  - Utilizado para fazer UPDATE de um usuáurio.
 ```JSON
   "firstName": "Ayrton",
   "lastName": "Senna",
