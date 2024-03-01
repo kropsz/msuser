@@ -9,13 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.compassuol.sp.challenge.msuser.enumerate.EventEnum;
 import com.compassuol.sp.challenge.msuser.exception.BusinessViolationException;
 import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
-import com.compassuol.sp.challenge.msuser.jwt.JwtTokenService;
+import com.compassuol.sp.challenge.msuser.feign.AddressFeign;
+import com.compassuol.sp.challenge.msuser.jwt.JwtTokenProvider;
+import com.compassuol.sp.challenge.msuser.model.Address;
 import com.compassuol.sp.challenge.msuser.model.Event;
 import com.compassuol.sp.challenge.msuser.model.User;
 import com.compassuol.sp.challenge.msuser.mqueue.EventNotificationPublisher;
 import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 import com.compassuol.sp.challenge.msuser.service.business.VerifyBusinessRules;
 import com.compassuol.sp.challenge.msuser.web.dto.UserMakeLoginDto;
+import com.compassuol.sp.challenge.msuser.web.dto.UserResponseDto;
 import com.compassuol.sp.challenge.msuser.web.dto.UserUpdateFieldsDto;
 import com.compassuol.sp.challenge.msuser.web.dto.mapper.UserMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,11 +31,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final VerifyBusinessRules checkRules;
-    private final JwtTokenService tokenService;
+    private final JwtTokenProvider tokenService;
     private final EventNotificationPublisher eventPublisher;
+    private final AddressFeign addressFeign;
 
     @Transactional
-    public User registerUser(User user) {
+    public UserResponseDto registerUser(User user) {
         if (checkRules.verifyIfCredentialsExists(user))
             throw new BusinessViolationException("Email ou CPF ja existem");
         user.setPassword(encryptPassword(user.getPassword()));
@@ -43,7 +47,9 @@ public class UserService {
         } catch (JsonProcessingException ex) {
             throw new BusinessViolationException("Erro Enviando mensagem para fila de eventos !");
         }
-        return userRepository.save(user);
+        userRepository.save(user);
+        return setAddress(user);
+
     }
 
     @Transactional
@@ -63,14 +69,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserById(Long id) {
+    public UserResponseDto getUserById(Long id) {
         var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
-        return user;
+        return setAddress(user);
     }
 
     @Transactional
-    public User updateUserFields(Long id, UserUpdateFieldsDto updateDto) {
+    public UserResponseDto updateUserFields(Long id, UserUpdateFieldsDto updateDto) {
         var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+        if (user.getCpf() != null || user.getEmail() != null){
+            if (checkRules.verifyIfCredentialsExists(user))
+                throw new BusinessViolationException("CPF ou Email já existem !");
+        }
         User updateUser = userRepository.save(UserMapper.toUserFromUpdateUser(updateDto, user));
         try {
             Event event = new Event(updateUser.getEmail(), EventEnum.UPDATE, null);
@@ -78,7 +88,7 @@ public class UserService {
         } catch (Exception e) {
             throw new BusinessViolationException("Erro enviando mensagem para fila de eventos !");
         }
-        return updateUser;
+        return setAddress(updateUser);
     }
 
     @Transactional
@@ -93,10 +103,16 @@ public class UserService {
             throw new BusinessViolationException("Erro enviando mensagem para fila de eventos !");
         }
         return user;
-
     }
 
     public String encryptPassword(String password) {
         return new BCryptPasswordEncoder().encode(password);
+    }
+
+    public UserResponseDto setAddress(User user) {
+        Address address = addressFeign.getAddressByCep(user.getCep());
+        UserResponseDto response = UserMapper.tDto(user);
+        response.setAddress(address);
+        return response;
     }
 }

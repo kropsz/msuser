@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.msuser.web.exception;
 
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
+import com.compassuol.sp.challenge.msuser.exception.TokenVerificationException;
 import com.compassuol.sp.challenge.msuser.exception.BusinessViolationException;
 import com.compassuol.sp.challenge.msuser.exception.UserNotFoundException;
 
@@ -21,20 +20,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class ApiExceptionHandler{
+public class ApiExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request,
-                                                                        BindingResult result){
+    public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex,
+            HttpServletRequest request,
+            BindingResult result) {
         log.error("Api Error - ", ex);
-    return ResponseEntity
-            .status(HttpStatus.UNPROCESSABLE_ENTITY)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campos Inválidos: ", result));
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campos Inválidos: ", result));
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorMessage> entityNotFoundException(UserNotFoundException ex, HttpServletRequest request){
+    public ResponseEntity<ErrorMessage> entityNotFoundException(UserNotFoundException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -43,7 +43,8 @@ public class ApiExceptionHandler{
     }
 
     @ExceptionHandler(BusinessViolationException.class)
-    public ResponseEntity<ErrorMessage>  businessViolationException(BusinessViolationException ex, HttpServletRequest request){
+    public ResponseEntity<ErrorMessage> businessViolationException(BusinessViolationException ex,
+            HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -51,8 +52,9 @@ public class ApiExceptionHandler{
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
-    @ExceptionHandler(BadGatewayException.class)
-    public ResponseEntity<ErrorMessage> accessDeniedException(BadGatewayException ex, HttpServletRequest request) {
+    @ExceptionHandler(TokenVerificationException.class)
+    public ResponseEntity<ErrorMessage> accessDeniedException(TokenVerificationException ex,
+            HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
@@ -60,7 +62,6 @@ public class ApiExceptionHandler{
                 .body(new ErrorMessage(request, HttpStatus.FORBIDDEN, ex.getMessage()));
     }
 
-    
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> unexpectedErrorException(RuntimeException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);

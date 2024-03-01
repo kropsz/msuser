@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,15 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
+import com.compassuol.sp.challenge.msuser.exception.TokenVerificationException;
 import com.compassuol.sp.challenge.msuser.model.User;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class JwtTokenService {
+public class JwtTokenProvider {
 
-    
     @Value("${api.security.token.secret}")
     private String secret;
 
@@ -39,7 +37,7 @@ public class JwtTokenService {
             log.info("Token criado com sucesso para o usuário");
             return token;
         } catch (JWTCreationException ex) {
-            throw new BadGatewayException("Erro ao criar o token JWT");
+            throw new TokenVerificationException("Erro ao criar o token JWT");
         }
     }
 
@@ -54,8 +52,8 @@ public class JwtTokenService {
             log.info("Token validado com sucesso. Sujeito");
             return jwt.getSubject();
         } catch (JWTVerificationException ex) {
-            log.warn("Lançada a BadGatewayException");
-            throw new BadGatewayException("Erro ao validar o token JWT");
+            log.warn("Lançada a RuntimeException");
+            throw new TokenVerificationException("Erro ao validar o token JWT");
         }
     }
 

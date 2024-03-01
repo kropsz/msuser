@@ -39,5 +39,5 @@ public class UserRequestDto {
     @NotBlank(message = "Campo'password' não pode ser vazio")
     @Size(min = 6, message = "A senha deve possuir mais que 6 caracteres")
     private String password;
-    private boolean active; 
+    private boolean active;
 }

@@ -2,8 +2,11 @@ package com.compassuol.sp.challenge.msuser.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -11,7 +14,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.compassuol.sp.challenge.msuser.exception.BadGatewayException;
+import com.compassuol.sp.challenge.msuser.exception.TokenVerificationException;
 import com.compassuol.sp.challenge.msuser.model.User;
 import com.compassuol.sp.challenge.msuser.repository.UserRepository;
 
@@ -25,10 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SecurityFilter extends OncePerRequestFilter {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private PathMatcher pathMatcher = new AntPathMatcher();
-    private final JwtTokenService tokenService;
+    private final JwtTokenProvider tokenService;
     private final UserRepository userRepository;
 
     @Override
@@ -55,16 +59,17 @@ public class SecurityFilter extends OncePerRequestFilter {
                 } else {
                     log.warn("Usuário não encontrado para o login: {}", login);
                 }
+                filterChain.doFilter(request, response);
+            } else {
+                log.warn("Token não fornecido");
+                throw new TokenVerificationException("Token não fornecido");
             }
-
-            filterChain.doFilter(request, response);
-
-        } catch (BadGatewayException ex) {
+        } catch (RuntimeException ex) {
             log.error("Acesso negado", ex);
-            throw new BadGatewayException(ex.getMessage());
+            throw new TokenVerificationException(ex.getMessage());
         } catch (Exception ex) {
             log.error("Erro ao filtrar a solicitação", ex);
-            throw new RuntimeException(ex);
+            throw new TokenVerificationException(ex.getMessage());
         }
     }
 
@@ -80,7 +85,10 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private boolean isPathMatch(String requestURI) {
-        return Arrays.stream(SpringSecurityConfig.DOCUMENTATION_OPENAPI)
-            .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
+        List<String> openEndpoints = Arrays.asList("/docs/index.html", "/docs-park.html", "/docs-park/**",
+                "/v3/api-docs/**", "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**", "/**.html",
+                "/webjars/**", "/configuration/**", "/swagger-resources/**", "/api/users/login/**", "/api/users");
+        return openEndpoints.stream().anyMatch(p -> pathMatcher.match(p, requestURI));
     }
+
 }

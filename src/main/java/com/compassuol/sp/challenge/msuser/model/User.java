@@ -26,8 +26,11 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class User implements UserDetails{
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,12 +47,13 @@ public class User implements UserDetails{
     private String password;
     private Boolean active;
 
-
-  @Override
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == Role.ADMIN) return List.of(
-                new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"));
-        else return List.of(new SimpleGrantedAuthority("USER"));
+        if (this.role == Role.ADMIN)
+            return List.of(
+                    new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override

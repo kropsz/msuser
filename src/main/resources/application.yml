@@ -1,9 +1,8 @@
-server:
-  port: 8000
-
 spring:
   application:
     name: ms-user
+  server:
+    port: 8000
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_user?createDatabaseIfNotExist=true&serverTimezone=UTC
@@ -14,7 +13,8 @@ spring:
       ddl-auto: update
     generate-ddl: true
     show-sql: true
-    open-in-view: true
+  open-in-view: true
+
 api:
   security:
     token:
@@ -28,4 +28,8 @@ rabbitmq:
 
 mq:
   queue:
-    event-notification: event-notification 
+    event-notification: event-notification
+
+springdoc:
+  swagger-ui:
+    enabled: true
