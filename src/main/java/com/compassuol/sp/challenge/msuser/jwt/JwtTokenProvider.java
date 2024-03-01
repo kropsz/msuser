@@ -13,6 +13,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.compassuol.sp.challenge.msuser.exception.TokenVerificationException;
 import com.compassuol.sp.challenge.msuser.model.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class JwtTokenProvider {
             log.info("Token criado com sucesso para o usuário");
             return token;
         } catch (JWTCreationException ex) {
-            throw new RuntimeException("Erro ao criar o token JWT");
+            throw new TokenVerificationException("Erro ao criar o token JWT");
         }
     }
 
@@ -52,7 +53,7 @@ public class JwtTokenProvider {
             return jwt.getSubject();
         } catch (JWTVerificationException ex) {
             log.warn("Lançada a RuntimeException");
-            throw new RuntimeException("Erro ao validar o token JWT");
+            throw new TokenVerificationException("Erro ao validar o token JWT");
         }
     }
 
