@@ -77,6 +77,10 @@ public class UserService {
     @Transactional
     public UserResponseDto updateUserFields(Long id, UserUpdateFieldsDto updateDto) {
         var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
+        if (user.getCpf() != null || user.getEmail() != null){
+            if (checkRules.verifyIfCredentialsExists(user))
+                throw new BusinessViolationException("CPF ou Email já existem !");
+        }
         User updateUser = userRepository.save(UserMapper.toUserFromUpdateUser(updateDto, user));
         try {
             Event event = new Event(updateUser.getEmail(), EventEnum.UPDATE, null);

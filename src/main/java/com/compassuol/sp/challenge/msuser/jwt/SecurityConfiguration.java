@@ -36,7 +36,8 @@ public class SecurityConfiguration {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(OPEN_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("api/user/{id}").authenticated()
+                        .anyRequest().permitAll()
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
