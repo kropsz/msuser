@@ -4,6 +4,7 @@ O projeto foi desenvolvido para o desafio 3 do programa de Bolsas da Compass UOL
 ## Tecnologias Utilizadas
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/Rabbitmq-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
@@ -122,6 +123,9 @@ Navegue até a pasta  `src/main/resources` onde está o arquivo `application.yml
 *  `url` : Informe o endereço do seu banco de dados MySql.
 *  `username`: Informe o nome de usuário do banco de dados MySql.
 *  `password`: Informe a senha do seu usuário do banco de dados MySql
+
+### Docker Compose
+No terminal navegue até a pasta raiz do projeto e execute o comando `docker-compose up -d` para poder executar o RabbitMQ via Docker
 
 ### Conclusão
 
