@@ -93,7 +93,7 @@ Gerenciador de Dependências : Maven
   "active": true
 ```
 
-### Atualizar Senha do Usuário
+#### Atualizar Senha do Usuário
 * `REQUEST`  - Utilizado para fazer UPDATE da senha de um usuário.
 ```JSON
  {
