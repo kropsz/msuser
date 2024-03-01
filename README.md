@@ -15,6 +15,7 @@ Gerenciador de Dependências : Maven
 - Spring Boot 3
 - Spring Web
 - Spring Validation
+- Spring Security
 - Spring Data JPA
 - Spring Doc OpenAPI Swagger
 - Spring DevTools
